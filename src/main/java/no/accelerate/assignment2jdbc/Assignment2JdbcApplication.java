@@ -16,6 +16,7 @@ public class Assignment2JdbcApplication implements CommandLineRunner {
         System.out.println("yo");
         ChinookDAO chinookDAO = new ChinookDAO();
         chinookDAO.testConnection();
+        System.out.println("What it do");
     }
 
     @Override
