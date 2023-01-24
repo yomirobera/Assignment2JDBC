@@ -12,7 +12,10 @@ public interface CustomerRepository extends CrudRepository<Customer,Integer> {
 
      */
     List<Customer> findAll();
-    Customer getById(Integer id);
 
+    void getCustomerById(int id);
 
+    void getCustomerByName(String firstName, String lastName);
+
+    List<Customer> pageOfCustomers(int limit, int offset);
 }

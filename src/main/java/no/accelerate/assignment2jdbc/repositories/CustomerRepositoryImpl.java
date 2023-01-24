@@ -55,25 +55,108 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public Customer getById(Integer id) {
+    public void getCustomerById(int id){
         String sql = "SELECT * FROM customer WHERE customer_id = ?";
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
             // Write statement
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1,id);
-
+            statement.setInt(1, id);
             // Execute statement
             ResultSet result = statement.executeQuery();
-            // Handle result
+            while(result.next()) {
+                Customer customer = new Customer(
+                        result.getString("customer_id"),
+                        result.getString("first_name"),
+                        result.getString("last_name"),
+                        result.getString("country"),
+                        result.getString("postal_code"),
+                        result.getString("phone"),
+                        result.getString("email")
+                );
+                System.out.println(customer);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Customer;
     }
 
     @Override
-    public int insert(Customer object) {
-        return 0;
+    public void getCustomerByName(String firstName, String lastName){
+        String sql = "SELECT * FROM customer WHERE first_name LIKE ? AND last_name LIKE ?";
+        try(Connection conn = DriverManager.getConnection(url, username,password)) {
+            // Write statement
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, firstName);
+            statement.setString(2, lastName);
+            // Execute statement
+            ResultSet result = statement.executeQuery();
+            while(result.next()) {
+                Customer customer = new Customer(
+                        result.getString("customer_id"),
+                        result.getString("first_name"),
+                        result.getString("last_name"),
+                        result.getString("country"),
+                        result.getString("postal_code"),
+                        result.getString("phone"),
+                        result.getString("email")
+                );
+                System.out.println(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Customer> pageOfCustomers(int limit, int offset){
+        String sql = "SELECT * FROM customer LIMIT ? OFFSET ?";
+        List<Customer> customers = new ArrayList<>();
+        try(Connection conn = DriverManager.getConnection(url, username,password)) {
+            // Write statement
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, limit);
+            statement.setInt(2, offset);
+            // Execute statement
+            ResultSet result = statement.executeQuery();
+            // Handle result
+            while(result.next()) {
+                Customer customer = new Customer(
+                        result.getString("customer_id"),
+                        result.getString("first_name"),
+                        result.getString("last_name"),
+                        result.getString("country"),
+                        result.getString("postal_code"),
+                        result.getString("phone"),
+                        result.getString("email")
+                );
+                customers.add(customer);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    //Inserting new customer
+    @Override
+    public int insert(Customer customer) {
+        String sql = "INSERT INTO customers (first_name,last_name,country,postal_code,phone,email) VALUES (?,?,?,?,?,?)";
+        int result = 0;
+        try(Connection conn = DriverManager.getConnection(url, username,password)) {
+            // Write statement
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, customer.firstname());
+            statement.setString(2, customer.lastname());
+            statement.setString(3, customer.country());
+            statement.setString(4, customer.postalcode());
+            statement.setString(5, customer.phone());
+            statement.setString(6, customer.email());
+            // Execute statement
+            result = statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
