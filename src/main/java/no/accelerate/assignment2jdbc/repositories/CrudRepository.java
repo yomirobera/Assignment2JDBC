@@ -9,7 +9,7 @@ public interface CrudRepository <T, U> {
     List<T> findAll();
     int insert(T object);
     void create (T object);
-    void update(T object);
+    void update(T object, int id);
     void deleteById(U id);
 
     void getCustomerById(int id);

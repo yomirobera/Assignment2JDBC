@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -36,7 +37,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             // Execute statement
             ResultSet result = statement.executeQuery();
             // Handle result
-            while(result.next()) {
+            while(result.next() ) {
                 Customer customer = new Customer(
                         result.getString("customer_id"),
                         result.getString("first_name"),
@@ -140,7 +141,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     //Inserting new customer
     @Override
     public int insert(Customer customer) {
-        String sql = "INSERT INTO customers (first_name,last_name,country,postal_code,phone,email) VALUES (?,?,?,?,?,?)";
+        String sql = "INSERT INTO customer (first_name,last_name,country,postal_code,phone,email) VALUES (?,?,?,?,?,?)";
         int result = 0;
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
             // Write statement
@@ -165,8 +166,24 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
     @Override
-    public void update(Customer object) {
-
+    public void update(Customer customer, int id) {
+        String sql = "UPDATE customer SET first_name = ?, last_name = ?, country = ?, postal_code = ?, phone = ?, email = ? " +
+                "WHERE customer_id = ?";
+        try(Connection conn = DriverManager.getConnection(url, username,password)) {
+            // Write statement
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, customer.firstname());
+            statement.setString(2, customer.lastname());
+            statement.setString(3, customer.country());
+            statement.setString(4, customer.postalcode());
+            statement.setString(5, customer.phone());
+            statement.setString(6, customer.email());
+            statement.setInt(7, id);
+            // Execute statement
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

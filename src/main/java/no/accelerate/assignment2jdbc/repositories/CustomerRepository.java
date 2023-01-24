@@ -18,4 +18,8 @@ public interface CustomerRepository extends CrudRepository<Customer,Integer> {
     void getCustomerByName(String firstName, String lastName);
 
     List<Customer> pageOfCustomers(int limit, int offset);
+
+    int insert(Customer customer);
+
+    void update(Customer customer, int id);
 }
