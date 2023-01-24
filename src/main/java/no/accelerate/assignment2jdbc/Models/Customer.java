@@ -1,5 +1,5 @@
 package no.accelerate.assignment2jdbc.Models;
 
-public record Customer(int customerId, String firstName, String lastName, String country, int postalCode, int phone,
+public record Customer(String customerId, String firstname, String lastname, String country, String postalcode, String phone,
                        String email) {
 }

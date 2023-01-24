@@ -6,10 +6,13 @@ import java.util.List;
 
 
 
-public interface CustomerRepository extends CrudRepository<Integer, Customer> {
+public interface CustomerRepository extends CrudRepository<Customer,Integer> {
     /* Operation like update, delete, change, search ...
-
+    //Extended methods
 
      */
-    List<Customer> getAllByPhone(int Phone);
+    List<Customer> findAll();
+    Customer getById(Integer id);
+
+
 }
