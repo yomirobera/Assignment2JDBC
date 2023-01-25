@@ -38,7 +38,7 @@ public class ChinookDAO {
             // Handle result
             while(result.next()) {
                 Customer customer = new Customer(
-                        result.getString("customer_id"),
+                        result.getInt("customer_id"),
                         result.getString("first_name"),
                         result.getString("last_name"),
                         result.getString("country"),

@@ -23,13 +23,18 @@ public class ChinookRunner implements CommandLineRunner {
         //customerRepository.getCustomerById(5);
         //customerRepository.getCustomerByName("Julia", "Barnett");
         //customerRepository.pageOfCustomers(5, 10).forEach(System.out::println);
-        Customer yomi = new Customer("1", "Yomi", "Robera",
+        Customer yomi = new Customer(1, "Yomi", "Robera",
                 "Norway", "0123", "40995599", "yomidw@gmail.com");
         //customerRepository.insert(yomi);
-        Customer simen = new Customer("1", "Simen", "Skaarseth",
+        Customer simen = new Customer(1, "Simen", "Skaarseth",
                 "Norway", "1234", "99887766", "simen@gmail.com");
-        customerRepository.update(simen, 50);
+        customerRepository.update(simen, 62);
         customerRepository.findAll().forEach(System.out::println);
-
+        //System.out.println(customerRepository.countryMostCustomers());
+        System.out.println(customerRepository.highestSpender());
+        Customer messi = new Customer(1, "Lionel", "Messi",
+                "Argentina", "1234", "99887466", "messi@gmail.com");
+        //customerRepository.insert(messi);
+        System.out.println(customerRepository.mostPopularGenre(messi));
     }
 }
