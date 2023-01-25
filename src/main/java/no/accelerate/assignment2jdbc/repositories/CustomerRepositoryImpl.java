@@ -238,7 +238,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     public List<CustomerGenre> mostPopularGenre(Customer customer){
         String sql = "SELECT CONCAT(?, ' ', ?) as full_name," +
                 "genre.name as genre, count(*) as total FROM customer " +
-                "INNER JOIN invoice ON invoice.customer_id = customer.customer_id INNER JOIN invoice_line ON invoice.invoice_id = invoice_line.invoice_id INNER JOIN track ON track.track_id = invoice_line.track_id INNER JOIN genre ON track.genre_id = genre.genre_id GROUP BY genre.name, genre.genre_id ORDER BY count(*) DESC LIMIT 1";
+                "INNER JOIN invoice ON invoice.customer_id = customer.customer_id INNER JOIN invoice_line ON invoice.invoice_id = invoice_line.invoice_id INNER JOIN track ON track.track_id = invoice_line.track_id INNER JOIN genre ON track.genre_id = genre.genre_id GROUP BY genre.name, genre.genre_id ORDER BY count(*) DESC FETCH FIRST 1 ROWS ONLY";
 
         List<CustomerGenre> winnerGenre = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
