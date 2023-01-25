@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Repository
@@ -33,7 +31,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     @Override
     public List<Customer> findAll() {
-        String sql = "SELECT * FROM customer";
+        String sql = "SELECT * FROM customer ORDER BY customer_id";
         List<Customer> customers = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
             // Write statement
@@ -56,14 +54,14 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        customers.sort(Comparator.comparingInt(Customer::customerId));
 
         return customers;
     }
 
     @Override
-    public void getCustomerById(int id){
+    public Customer getCustomerById(int id){
         String sql = "SELECT * FROM customer WHERE customer_id = ?";
+        Customer customer = null;
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
             // Write statement
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -71,7 +69,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             // Execute statement
             ResultSet result = statement.executeQuery();
             while(result.next()) {
-                Customer customer = new Customer(
+                customer = new Customer(
                         result.getInt("customer_id"),
                         result.getString("first_name"),
                         result.getString("last_name"),
@@ -80,16 +78,17 @@ public class CustomerRepositoryImpl implements CustomerRepository{
                         result.getString("phone"),
                         result.getString("email")
                 );
-                System.out.println(customer);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return customer;
     }
 
     @Override
-    public void getCustomerByName(String firstName, String lastName){
+    public Customer getCustomerByName(String firstName, String lastName){
         String sql = "SELECT * FROM customer WHERE first_name LIKE ? AND last_name LIKE ?";
+        Customer customer = null;
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
             // Write statement
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -98,7 +97,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             // Execute statement
             ResultSet result = statement.executeQuery();
             while(result.next()) {
-                Customer customer = new Customer(
+                customer = new Customer(
                         result.getInt("customer_id"),
                         result.getString("first_name"),
                         result.getString("last_name"),
@@ -107,16 +106,16 @@ public class CustomerRepositoryImpl implements CustomerRepository{
                         result.getString("phone"),
                         result.getString("email")
                 );
-                System.out.println(customer);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return customer;
     }
 
     @Override
     public List<Customer> pageOfCustomers(int limit, int offset){
-        String sql = "SELECT * FROM customer LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM customer ORDER BY customer_id LIMIT ? OFFSET ?";
         List<Customer> customers = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
             // Write statement
@@ -173,7 +172,8 @@ public class CustomerRepositoryImpl implements CustomerRepository{
 
     @Override
     public void update(Customer customer, int id) {
-        String sql = "UPDATE customer SET first_name = ?, last_name = ?, country = ?, postal_code = ?, phone = ?, email = ? " +
+        String sql = "UPDATE customer " +
+                "SET first_name = ?, last_name = ?, country = ?, postal_code = ?, phone = ?, email = ? " +
                 "WHERE customer_id = ?";
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
             // Write statement
@@ -235,18 +235,20 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return winnerSpender;
     }
 
-    public List<CustomerGenre> mostPopularGenre(Customer customer){
+    @Override
+    public List<CustomerGenre> mostPopularGenre(int id){
         String sql = "SELECT CONCAT(?, ' ', ?) as full_name," +
                 "genre.name as genre, count(*) as total FROM customer " +
-                "INNER JOIN invoice ON invoice.customer_id = customer.customer_id INNER JOIN invoice_line ON invoice.invoice_id = invoice_line.invoice_id INNER JOIN track ON track.track_id = invoice_line.track_id INNER JOIN genre ON track.genre_id = genre.genre_id GROUP BY genre.name, genre.genre_id ORDER BY count(*) DESC FETCH FIRST 1 ROWS ONLY";
+                "INNER JOIN invoice ON invoice.customer_id = customer.customer_id INNER JOIN invoice_line ON invoice.invoice_id = invoice_line.invoice_id INNER JOIN track ON track.track_id = invoice_line.track_id INNER JOIN genre ON track.genre_id = genre.genre_id WHERE customer.customer_id = ? GROUP BY customer.customer_id, genre.genre_id ORDER BY count(*) DESC FETCH FIRST 1 ROWS WITH TIES";
 
         List<CustomerGenre> winnerGenre = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
             // Write statement
             PreparedStatement statement = conn.prepareStatement(sql);
 
-            statement.setString(1, customer.firstname());
-            statement.setString(2, customer.lastname());
+            statement.setString(1, getCustomerById(id).firstname());
+            statement.setString(2, getCustomerById(id).lastname());
+            statement.setInt(3, id);
 
             // Execute statement
             ResultSet result = statement.executeQuery();

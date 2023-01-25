@@ -17,11 +17,11 @@ public interface CustomerRepository extends CrudRepository<Customer,Integer> {
     List<Customer> findAll();
     CustomerCountry countryMostCustomers();
     CustomerSpender highestSpender();
-    List<CustomerGenre> mostPopularGenre(Customer customer);
+    List<CustomerGenre> mostPopularGenre(int id);
 
-    void getCustomerById(int id);
+    Customer getCustomerById(int id);
 
-    void getCustomerByName(String firstName, String lastName);
+    Customer getCustomerByName(String firstName, String lastName);
 
     List<Customer> pageOfCustomers(int limit, int offset);
 

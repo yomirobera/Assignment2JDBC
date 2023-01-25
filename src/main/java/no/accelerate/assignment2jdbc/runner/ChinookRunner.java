@@ -18,23 +18,43 @@ public class ChinookRunner implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        //customerRepository.findAll().forEach(System.out::println);
-        //customerRepository.getCustomerById(5);
-        //customerRepository.getCustomerByName("Julia", "Barnett");
-        //customerRepository.pageOfCustomers(5, 10).forEach(System.out::println);
-        Customer yomi = new Customer(1, "Yomi", "Robera",
-                "Norway", "0123", "40995599", "yomidw@gmail.com");
-        //customerRepository.insert(yomi);
-        Customer simen = new Customer(1, "Simen", "Skaarseth",
-                "Norway", "1234", "99887766", "simen@gmail.com");
-        customerRepository.update(simen, 62);
+    public void run(String... args) {
+        printTask(1, "Read all customers");
         customerRepository.findAll().forEach(System.out::println);
-        //System.out.println(customerRepository.countryMostCustomers());
+
+        printTask(2, "Read a specific customer by id");
+        System.out.println(customerRepository.getCustomerById(10));
+
+        printTask(3, "Read a specific customer by name");
+        System.out.println(customerRepository.getCustomerByName("Julia", "Barnett"));
+
+        printTask(4, "Return a subset of customers with limit and offset");
+        customerRepository.pageOfCustomers(7, 5).forEach(System.out::println);
+
+        printTask(5, "Add a new customer");
+        Customer yomi = new Customer(1, "Yomi", "Robera",
+                "Norway", "0123", "40995577", "yomidw@gmail.com");
+        customerRepository.insert(yomi);
+        System.out.println(customerRepository.getCustomerById(customerRepository.findAll().size()));
+
+        printTask(6, "Update an existing customer");
+        Customer simen = new Customer(1, "Simen", "Skaarseth",
+                "Norway", "1234", "99887755", "simen@gmail.com");
+        customerRepository.update(simen, 30);
+        customerRepository.pageOfCustomers(3, 28).forEach(System.out::println);
+
+        printTask(7, "Return country with most customers");
+        System.out.println(customerRepository.countryMostCustomers());
+
+        printTask(8, "Return the highest spending customer");
         System.out.println(customerRepository.highestSpender());
-        Customer messi = new Customer(1, "Lionel", "Messi",
-                "Argentina", "1234", "99887466", "messi@gmail.com");
-        //customerRepository.insert(messi);
-        System.out.println(customerRepository.mostPopularGenre(messi));
+
+        printTask(9, "Return their most popular genre of a customer");
+        System.out.println("One genre: " + customerRepository.mostPopularGenre(6));
+        System.out.println("Two genres: " + customerRepository.mostPopularGenre(12));
+    }
+
+    void printTask(int i, String s){
+        System.out.println("\n********** TASK " + i + ": " + s + " **********");
     }
 }

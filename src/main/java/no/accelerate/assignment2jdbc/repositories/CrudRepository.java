@@ -12,15 +12,15 @@ public interface CrudRepository <T, U> {
     List<T> findAll();
     CustomerCountry countryMostCustomers();
     CustomerSpender highestSpender();
-    List<CustomerGenre> mostPopularGenre(Customer customer);
+    List<CustomerGenre> mostPopularGenre(int id);
     int insert(T object);
     void create (T object);
     void update(T object, int id);
     void deleteById(U id);
 
-    void getCustomerById(int id);
 
-    void getCustomerByName(String firstName, String lastName);
 
-    List<Customer> pageOfCustomers(int limit, int offset);
+
+
+
 }
