@@ -6,9 +6,11 @@ import no.accelerate.assignment2jdbc.Models.CustomerGenre;
 import no.accelerate.assignment2jdbc.Models.CustomerSpender;
 
 import java.util.List;
-/* Operation like update, change, search ...
+
+/**
+ * Includes operations such as Insert, Update, Search..
+ */
     //Extended methods
-     */
 
 public interface CustomerRepository extends CrudRepository<Customer,Integer> {
     /* Operation like update, delete, change, search ...

@@ -28,8 +28,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         this.password = password;
     }
 
-
-    //Read all the customers in the database
+    /**
+     * Read all the customers in the customer table. Returns a list of all customers.
+     */
     @Override
     public List<Customer> findAll() {
         //Sql query to get all customers
@@ -60,7 +61,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customers;
     }
 
-    //Read a specific customer from the database (by Id)
+    /**
+     * Read a specific customer from the customer table. Returns the customer based on id.
+     */
     @Override
     public Customer findById(Integer id){
         String sql = "SELECT * FROM customer WHERE customer_id = ?";
@@ -88,7 +91,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customer;
     }
 
-    //Read a specific customer by name.
+    /**
+     * Reads a specific customer by name from the customer table. Returns the customer.
+     */
     @Override
     public Customer getCustomerByName(String firstName, String lastName){
         String sql = "SELECT * FROM customer WHERE first_name LIKE ? AND last_name LIKE ?";
@@ -117,7 +122,10 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customer;
     }
 
-    //Return a page of customers from the database.
+    /**
+     * Returns a list of customers from the customer table. The list
+     * starts at offset with limit amount of customers.
+     */
     @Override
     public List<Customer> pageOfCustomers(int limit, int offset){
         String sql = "SELECT * FROM customer ORDER BY customer_id LIMIT ? OFFSET ?";
@@ -148,7 +156,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customers;
     }
 
-    //Inserting new customer
+    /**
+     * Inserts the new customer.
+     */
     @Override
     public int insert(Customer customer) {
         String sql = "INSERT INTO customer (first_name,last_name,country,postal_code,phone,email) VALUES (?,?,?,?,?,?)";
@@ -170,7 +180,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return result;
     }
 
-    //Update an existing customer
+    /**
+     * Updates the new customer.
+     */
     @Override
     public void update(Customer customer, Integer id) {
         //Sql query for updating a customer
@@ -194,7 +206,10 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         }
     }
 
-    //e country with the most customers.
+    /**
+     * country with the most customers.
+     * Returns the country with th most customers.
+     */
     public CustomerCountry countryMostCustomers(){
         String sql = "SELECT country, count(*) FROM customer GROUP BY country ORDER BY count(*) DESC LIMIT 1";
         CustomerCountry winnerCountry = null;
@@ -216,7 +231,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return winnerCountry;
     }
 
-    //Customer who is the highest spender.
+    /**
+     * Gets Customer who is the highest spender.
+     */
     public CustomerSpender highestSpender(){
         String sql = "SELECT CONCAT(first_name, ' ', last_name) as full_name, total FROM customer INNER JOIN invoice ON customer.customer_id = invoice.customer_id " +
                         "GROUP BY customer.customer_id, total ORDER BY total DESC LIMIT 1";
@@ -239,7 +256,11 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return winnerSpender;
     }
 
-    //For a given customer, their most popular genre
+    /**
+     * For a given customer, getting their most popular genre.
+     * Returns a list with one or more CustomerGenres, depending
+     * on if there is a tie between multiple genres.
+     */
     @Override
     public List<CustomerGenre> mostPopularGenre(int id){
         String sql = "SELECT CONCAT(?, ' ', ?) as full_name," +
