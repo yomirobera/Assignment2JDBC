@@ -22,7 +22,7 @@ INSERT INTO Power (Name, Description) VALUES (
 	('Cook Crystals','The sperhero has super intelligence');
 	
 /* Assigning superheroes their powers */
-/* Spiderman has multiple powers and the cook crystals power is used by multiple superheroes.*/
+/* Spider-man has multiple powers and the cook crystals power is used by multiple superheroes.*/
 INSERT INTO PowerSuperhero (SuperheroId, PowerId) VALUES (1, 1);
 INSERT INTO PowerSuperhero (SuperheroId, PowerId) VALUES (1, 4);
 INSERT INTO PowerSuperhero (SuperheroId, PowerId) VALUES (1, 2);

@@ -13,8 +13,8 @@ CREATE DATABASE "SuperheroesDb"
     IS_TEMPLATE = False;
 	
 
-/* 03_relationshipheroPower */
-/*Foreign key constraints for Superhero and power with alter table statments*/
+/* 03_relationshipSuperheroPower */
+/*Foreign key constraints for Superhero and power with alter table statements*/
 ALTER TABLE PowerSuperhero 
 ADD FOREIGN KEY (SuperheroId) REFERENCES Superhero(Id);
 ALTER TABLE PowerSuperhero

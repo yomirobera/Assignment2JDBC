@@ -29,8 +29,10 @@ public class CustomerRepositoryImpl implements CustomerRepository{
     }
 
 
+    //Read all the customers in the database
     @Override
     public List<Customer> findAll() {
+        //Sql query to get all customers
         String sql = "SELECT * FROM customer ORDER BY customer_id";
         List<Customer> customers = new ArrayList<>();
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
@@ -58,8 +60,9 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customers;
     }
 
+    //Read a specific customer from the database (by Id)
     @Override
-    public Customer getCustomerById(int id){
+    public Customer findById(Integer id){
         String sql = "SELECT * FROM customer WHERE customer_id = ?";
         Customer customer = null;
         try(Connection conn = DriverManager.getConnection(url, username,password)) {
@@ -85,6 +88,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customer;
     }
 
+    //Read a specific customer by name.
     @Override
     public Customer getCustomerByName(String firstName, String lastName){
         String sql = "SELECT * FROM customer WHERE first_name LIKE ? AND last_name LIKE ?";
@@ -113,6 +117,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return customer;
     }
 
+    //Return a page of customers from the database.
     @Override
     public List<Customer> pageOfCustomers(int limit, int offset){
         String sql = "SELECT * FROM customer ORDER BY customer_id LIMIT ? OFFSET ?";
@@ -165,13 +170,10 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return result;
     }
 
+    //Update an existing customer
     @Override
-    public void create(Customer object) {
-
-    }
-
-    @Override
-    public void update(Customer customer, int id) {
+    public void update(Customer customer, Integer id) {
+        //Sql query for updating a customer
         String sql = "UPDATE customer " +
                 "SET first_name = ?, last_name = ?, country = ?, postal_code = ?, phone = ?, email = ? " +
                 "WHERE customer_id = ?";
@@ -192,6 +194,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         }
     }
 
+    //e country with the most customers.
     public CustomerCountry countryMostCustomers(){
         String sql = "SELECT country, count(*) FROM customer GROUP BY country ORDER BY count(*) DESC LIMIT 1";
         CustomerCountry winnerCountry = null;
@@ -213,6 +216,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return winnerCountry;
     }
 
+    //Customer who is the highest spender.
     public CustomerSpender highestSpender(){
         String sql = "SELECT CONCAT(first_name, ' ', last_name) as full_name, total FROM customer INNER JOIN invoice ON customer.customer_id = invoice.customer_id " +
                         "GROUP BY customer.customer_id, total ORDER BY total DESC LIMIT 1";
@@ -235,6 +239,7 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return winnerSpender;
     }
 
+    //For a given customer, their most popular genre
     @Override
     public List<CustomerGenre> mostPopularGenre(int id){
         String sql = "SELECT CONCAT(?, ' ', ?) as full_name," +
@@ -246,8 +251,8 @@ public class CustomerRepositoryImpl implements CustomerRepository{
             // Write statement
             PreparedStatement statement = conn.prepareStatement(sql);
 
-            statement.setString(1, getCustomerById(id).firstname());
-            statement.setString(2, getCustomerById(id).lastname());
+            statement.setString(1, findById(id).firstname());
+            statement.setString(2, findById(id).lastname());
             statement.setInt(3, id);
 
             // Execute statement
@@ -266,8 +271,4 @@ public class CustomerRepositoryImpl implements CustomerRepository{
         return winnerGenre;
     }
 
-    @Override
-    public void deleteById(Integer id) {
-
-    }
 }

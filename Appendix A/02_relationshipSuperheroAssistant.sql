@@ -24,7 +24,7 @@ FOREIGN KEY (SuperheroId) REFERENCES Superhero(Id);
 
 
 /* Creating a relationship between superhero and power. This is done by creating a linking table called 
-PowerSuperhero. This is beacuse many to many relationship
+PowerSuperhero. This is because many to many relationship
 */
 CREATE TABLE PowerSuperhero(
 	SuperheroId INT REFERENCES Superhero(Id),
